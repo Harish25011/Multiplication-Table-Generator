@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiplication Table Generator</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f9f9f9, #e0f7fa);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #003366;
+      font-size: 2rem;
+      margin-bottom: 25px;
+      letter-spacing: 0.5px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    input, select {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: #003366;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0,51,102,0.2);
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    button {
+      flex: 1;
+      margin: 5px;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .btn-generate {
+      background: #003366;
+      color: white;
+    }
+
+    .btn-generate:hover {
+      background: #004b8d;
+    }
+
+    .btn-reset {
+      background: #ddd;
+      color: #333;
+    }
+
+    .btn-reset:hover {
+      background: #bbb;
+    }
+
+    .table-card {
+      margin-top: 30px;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    th {
+      background-color: #003366;
+      color: #fff;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #f1f8ff;
+    }
+
+    tr:nth-child(odd) td {
+      background-color: #e3f2fd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Multiplication Table Generator</h1>
+    <div class="card">
+      <div class="form-group">
+        <label for="number">Number:</label>
+        <input type="number" id="number" placeholder="Enter number" min="1">
+      </div>
+      <div class="form-group">
+        <label for="limit">Limit:</label>
+        <input type="number" id="limit" placeholder="Enter table limit" min="1">
+      </div>
+      <div class="form-group">
+        <label for="chunk">Rows per group (optional):</label>
+        <select id="chunk">
+          <option value="all">All</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+        </select>
+      </div>
+      <div class="btn-group">
+        <button class="btn-generate" onclick="generateTable()">Generate Table</button>
+        <button class="btn-reset" onclick="resetTable()">Reset</button>
+      </div>
+    </div>
+
+    <div id="tableContainer" class="table-card" style="display:none;"></div>
+  </div>
+
+  <script>
+    function generateTable() {
+      const num = parseInt(document.getElementById('number').value);
+      const limit = parseInt(document.getElementById('limit').value);
+      const chunkVal = document.getElementById('chunk').value;
+
+      if (!num || !limit || num <= 0 || limit <= 0) {
+        alert('Please enter valid number and limit.');
+        return;
+      }
+
+      const tableContainer = document.getElementById('tableContainer');
+      tableContainer.innerHTML = '';
+      tableContainer.style.display = 'block';
+
+      let rowsPerGroup = chunkVal === 'all' ? limit : parseInt(chunkVal);
+
+      for (let start = 1; start <= limit; start += rowsPerGroup) {
+        const end = Math.min(start + rowsPerGroup - 1, limit);
+
+        const table = document.createElement('table');
+        const header = document.createElement('tr');
+        header.innerHTML = `<th>Number</th><th>Multiplier</th><th>Result</th>`;
+        table.appendChild(header);
+
+        for (let i = start; i <= end; i++) {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td>${num}</td><td>${i}</td><td>${num * i}</td>`;
+          table.appendChild(row);
+        }
+
+        tableContainer.appendChild(table);
+      }
+    }
+
+    function resetTable() {
+      document.getElementById('number').value = '';
+      document.getElementById('limit').value = '';
+      document.getElementById('chunk').value = 'all';
+      const tableContainer = document.getElementById('tableContainer');
+      tableContainer.style.display = 'none';
+      tableContainer.innerHTML = '';
+    }
+  </script>
+</body>
+</html>
